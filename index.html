@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TabLooper + AutoScroll - Rotación automática de pestañas con auto‑scroll y alertas</title>
+    <meta name="description" content="Extensión de Chrome para rotación automática de pestañas con auto‑scroll y alertas para dashboards. Perfecto para monitorización continua de múltiples páginas.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="TabLooper + AutoScroll - Rotación automática de pestañas">
+    <meta property="og:description" content="Extensión de Chrome para rotación automática de pestañas con auto‑scroll y alertas para dashboards. Perfecto para monitorización continua.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="TabLooper + AutoScroll">
+    <meta name="twitter:description" content="Extensión de Chrome para rotación automática de pestañas con auto‑scroll y alertas">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0iIzI1NjNlYiIvPgo8cGF0aCBkPSJNOCA4aDh2NGgtOHptMTAgMGg2djRoLTZ6bS02IDZoNHY0aC00em02IDBoNHY0aC00em02IDBoNHY0aC00eiIgZmlsbD0id2hpdGUiLz4KPHN2Zz4K">
+    
+    <style>
+        :root {
+            --color-primary: #2563eb;
+            --color-primary-dark: #1d4ed8;
+            --color-secondary: #64748b;
+            --color-background: #ffffff;
+            --color-surface: #f8fafc;
+            --color-text: #1e293b;
+            --color-text-muted: #64748b;
+            --color-border: #e2e8f0;
+            --color-success: #059669;
+            --color-warning: #d97706;
+            --color-error: #dc2626;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --border-radius: 0.5rem;
+            --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --transition: all 0.2s ease;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-background: #0f172a;
+                --color-surface: #1e293b;
+                --color-text: #f1f5f9;
+                --color-text-muted: #94a3b8;
+                --color-border: #334155;
+                --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+                --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+                --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+            }
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: var(--color-text);
+            background-color: var(--color-background);
+        }
+        
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--color-primary);
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 4px;
+            z-index: 1000;
+        }
+        
+        .skip-link:focus {
+            top: 6px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                padding: 0 2rem;
+            }
+        }
+        
+        header {
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            padding: 1rem 0;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+        
+        .author {
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+        }
+        
+        .hero {
+            padding: 4rem 0;
+            text-align: center;
+            background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-background) 100%);
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--color-text);
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--color-text-muted);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 1.125rem;
+            }
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .btn:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+        
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--color-primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-text);
+            border-color: var(--color-border);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--color-surface);
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+        
+        .section {
+            padding: 4rem 0;
+        }
+        
+        .section:nth-child(even) {
+            background: var(--color-surface);
+        }
+        
+        .section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--color-text);
+        }
+        
+        .features-grid {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+        
+        .feature-card {
+            background: var(--color-background);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+            transition: var(--transition);
+        }
+        
+        .feature-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--color-text);
+        }
+        
+        .feature-card p {
+            color: var(--color-text-muted);
+        }
+        
+        .how-to-use {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .step {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--color-background);
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--color-primary);
+        }
+        
+        .step h3 {
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .screenshots-grid {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+        
+        .screenshot {
+            text-align: center;
+        }
+        
+        .screenshot-placeholder {
+            width: 100%;
+            height: 200px;
+            background: var(--color-surface);
+            border: 2px dashed var(--color-border);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        
+        .faq {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--color-background);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--color-border);
+        }
+        
+        .faq-item h3 {
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .support {
+            text-align: center;
+        }
+        
+        footer {
+            background: var(--color-surface);
+            border-top: 1px solid var(--color-border);
+            padding: 2rem 0;
+            text-align: center;
+            color: var(--color-text-muted);
+        }
+        
+        .privacy-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--color-success);
+            color: white;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin: 2rem auto;
+        }
+        
+        .permissions-list {
+            list-style: none;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .permissions-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: var(--color-background);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--color-border);
+        }
+        
+        .permission-icon {
+            width: 20px;
+            height: 20px;
+            color: var(--color-primary);
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main" class="skip-link">Saltar al contenido principal</a>
+    
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">TabLooper + AutoScroll</a>
+                <div class="author">Author: Ing. Joseph Mansilla Ch.</div>
+            </div>
+        </div>
+    </header>
+    
+    <main id="main">
+        <section class="hero">
+            <div class="container">
+                <h1>TabLooper + AutoScroll</h1>
+                <p>Rotación automática de pestañas con auto‑scroll y alertas para dashboards.</p>
+                <div class="cta-buttons">
+                    <a href="#" class="btn btn-primary">
+                        <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/>
+                        </svg>
+                        Descargar (Chrome Web Store)
+                    </a>
+                    <a href="#como-usar" class="btn btn-secondary">Instalar en modo desarrollador</a>
+                </div>
+            </div>
+        </section>
+        
+        <section id="caracteristicas" class="section">
+            <div class="container">
+                <h2>Características</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12h18m-9-9l9 9-9 9"/>
+                        </svg>
+                        <h3>Rotación Automática</h3>
+                        <p>Rotación inteligente de pestañas con control de tiempo total por pestaña igual al intervalo configurado.</p>
+                    </div>
+                    <div class="feature-card">
+                        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                        <h3>Auto‑Scroll Avanzado</h3>
+                        <p>Scroll automático con modos down/ping‑pong, emulación wheel/PageDown, selector de contenedor personalizable y traversal de Shadow DOM.</p>
+                    </div>
+                    <div class="feature-card">
+                        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        <h3>Sistema de Alertas SVG</h3>
+                        <p>Alertas visuales y sonoras por códigos de estado: 404 (azul), 500 (rojo), 401 (amarillo) basadas en consecutividad y proporción con overlay personalizable.</p>
+                    </div>
+                    <div class="feature-card">
+                        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <h3>Análisis de Gráficos</h3>
+                        <p>Selector de Alert Target (recomendado: svg rect), análisis de N barras por gráfico y retorno al inicio con espera de 2 segundos.</p>
+                    </div>
+                    <div class="feature-card">
+                        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 12l2 2 4-4"/>
+                            <circle cx="21" cy="12" r="9"/>
+                            <path d="M21 12c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.87 0 5.43-1.34 7.1-3.44"/>
+                        </svg>
+                        <h3>Control Inteligente</h3>
+                        <p>Filtro por dominio, pausa automática por interacción del usuario y múltiples modos de loop para diferentes casos de uso.</p>
+                    </div>
+                    <div class="feature-card">
+                        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <circle cx="9" cy="9" r="2"/>
+                            <path d="M21 15l-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                        </svg>
+                        <h3>Configuración Avanzada</h3>
+                        <p>Max Scroll Timeout, Scroll Step personalizable, modo smooth, selector CSS personalizado y configuración completa de alertas por series.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="como-usar" class="section">
+            <div class="container">
+                <h2>Cómo usar</h2>
+                <div class="how-to-use">
+                    <div class="step">
+                        <h3>1. Instalación en Modo Desarrollador</h3>
+                        <p>Navega a <code>chrome://extensions</code>, activa el "Developer mode" y usa "Load unpacked" para cargar la extensión desde la carpeta descargada.</p>
+                    </div>
+                    <div class="step">
+                        <h3>2. Panel de Control</h3>
+                        <p>Usa el popup para controlar: Start/Pause/Stop, Next/Prev, configurar Interval, Scroll Duration, Direction (down/ping-pong), Loop Mode, Filter Domain y Pause on interaction.</p>
+                    </div>
+                    <div class="step">
+                        <h3>3. Opciones Avanzadas</h3>
+                        <p>Configura Max Scroll Timeout, Scroll Step, modo Smooth, Custom Scroll Selector, Shadow DOM traversal, emulación wheel/PageDown y sistema completo de alertas: series mínimas, consecutividad, proporción, volumen, colores OK y barras por gráfico.</p>
+                    </div>
+                    <div class="step">
+                        <h3>4. Atajos de Teclado</h3>
+                        <p>Utiliza los atajos predefinidos para controlar rápidamente la rotación y el scroll sin necesidad de abrir el popup.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="privacidad" class="section">
+            <div class="container">
+                <h2>Privacidad</h2>
+                <div style="text-align: center;">
+                    <div class="privacy-badge">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.6 14.8,10V11.5C15.4,11.5 16,12.4 16,13V16C16,16.6 15.6,17 15,17H9C8.4,17 8,16.6 8,16V13C8,12.4 8.4,11.5 9,11.5V10C9,8.6 10.6,7 12,7M12,8.2C11.2,8.2 10.2,9.2 10.2,10V11.5H13.8V10C13.8,9.2 12.8,8.2 12,8.2Z"/>
+                        </svg>
+                        No se recolectan ni transmiten datos; todo ocurre localmente
+                    </div>
+                    <p>Tu privacidad es nuestra prioridad. TabLooper + AutoScroll funciona completamente offline y no envía información a servidores externos.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="permisos" class="section">
+            <div class="container">
+                <h2>Permisos y Justificación</h2>
+                <ul class="permissions-list">
+                    <li>
+                        <svg class="permission-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        <div>
+                            <strong>tabs:</strong> Para acceder y gestionar las pestañas del navegador
+                        </div>
+                    </li>
+                    <li>
+                        <svg class="permission-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12,3C7.58,3 4,4.79 4,7V17C4,19.21 7.58,21 12,21C16.42,21 20,19.21 20,17V7C20,4.79 16.42,3 12,3M18,17C18,17.5 15.87,19 12,19C8.13,19 6,17.5 6,17V14.77C7.61,15.55 9.72,16 12,16C14.28,16 16.39,15.55 18,14.77V17M18,12.45C16.7,13.4 14.42,14 12,14C9.58,14 7.3,13.4 6,12.45V9.64C7.47,10.47 9.61,11 12,11C14.39,11 16.53,10.47 18,9.64V12.45M18,7C18,7.5 15.87,9 12,9C8.13,9 6,7.5 6,7C6,6.5 8.13,5 12,5C15.87,5 18,6.5 18,7Z"/>
+                        </svg>
+                        <div>
+                            <strong>storage:</strong> Para guardar configuraciones del usuario
+                        </div>
+                    </li>
+                    <li>
+                        <svg class="permission-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M14.6,16.6L19.2,12L14.6,7.4L13.2,8.8L16.4,12L13.2,15.2L14.6,16.6M9.4,16.6L10.8,15.2L7.6,12L10.8,8.8L9.4,7.4L4.8,12L9.4,16.6Z"/>
+                        </svg>
+                        <div>
+                            <strong>scripting:</strong> Para inyectar scripts de auto-scroll en las páginas
+                        </div>
+                    </li>
+                    <li>
+                        <svg class="permission-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M16.36,14C16.44,13.34 16.5,12.68 16.5,12C16.5,11.32 16.44,10.66 16.36,10H19.74C19.9,10.64 20,11.31 20,12C20,12.69 19.9,13.36 19.74,14M14.59,19.56C15.19,18.45 15.65,17.25 15.97,16H18.92C17.96,17.65 16.43,18.93 14.59,19.56M14.34,14H9.66C9.56,13.34 9.5,12.68 9.5,12C9.5,11.32 9.56,10.65 9.66,10H14.34C14.43,10.65 14.5,11.32 14.5,12C14.5,12.68 14.43,13.34 14.34,14M12,19.96C11.17,18.76 10.5,17.43 10.09,16H13.91C13.5,17.43 12.83,18.76 12,19.96M8,8H5.08C6.03,6.34 7.57,5.06 9.4,4.44C8.8,5.55 8.35,6.75 8,8M5.08,16H8C8.35,17.25 8.8,18.45 9.4,19.56C7.57,18.93 6.03,17.65 5.08,16M4.26,14C4.1,13.36 4,12.69 4,12C4,11.31 4.1,10.64 4.26,10H7.64C7.56,10.66 7.5,11.32 7.5,12C7.5,12.68 7.56,13.34 7.64,14M12,4.03C12.83,5.23 13.5,6.57 13.91,8H10.09C10.5,6.57 11.17,5.23 12,4.03M18.92,8H15.97C15.65,6.75 15.19,5.55 14.59,4.44C16.43,5.07 17.96,6.34 18.92,8M12,2C6.47,2 2,6.5 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>
+                        </svg>
+                        <div>
+                            <strong>host_permissions &lt;all_urls&gt;:</strong> Para funcionar en todas las páginas web
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        
+        <section id="capturas" class="section">
+            <div class="container">
+                <h2>Capturas de Pantalla</h2>
+                <div class="screenshots-grid">
+                    <div class="screenshot">
+                        <div class="screenshot-placeholder">
+                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <path d="M9 9h6v6H9z"/>
+                                <path d="M9 1v6M15 1v6M9 17v6M15 17v6M1 9h6M17 9h6M1 15h6M17 15h6"/>
+                            </svg>
+                        </div>
+                        <p><strong>Panel de Control</strong><br>Interfaz principal con controles de rotación</p>
+                    </div>
+                    <div class="screenshot">
+                        <div class="screenshot-placeholder">
+                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M19.4 15a1.
