@@ -314,6 +314,97 @@
             text-align: center;
         }
         
+        .support-grid {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: 1fr;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        @media (min-width: 768px) {
+            .support-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        .support-card {
+            background: var(--color-background);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+            transition: var(--transition);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .support-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .support-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 64px;
+            height: 64px;
+            background: var(--color-primary);
+            color: white;
+            border-radius: 50%;
+            margin: 0 auto;
+        }
+        
+        .support-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-text);
+            margin: 0;
+        }
+        
+        .support-card p {
+            color: var(--color-text-muted);
+            flex-grow: 1;
+            margin: 0;
+        }
+        
+        .support-card .btn {
+            margin-top: auto;
+            align-self: center;
+            min-width: 200px;
+        }
+        
+        .privacy-note {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-top: 3rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 3rem;
+        }
+        
+        .privacy-note svg {
+            color: var(--color-success);
+            flex-shrink: 0;
+            margin-top: 0.125rem;
+        }
+        
+        .privacy-note p {
+            margin: 0;
+            color: var(--color-text-muted);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        
         footer {
             background: var(--color-surface);
             border-top: 1px solid var(--color-border);
@@ -392,6 +483,7 @@
                         Descargar (Chrome Web Store)
                     </a>
                     <a href="#como-usar" class="btn btn-secondary">Instalar en modo desarrollador</a>
+                    <a href="#soporte" class="btn btn-secondary">Obtener Soporte</a>
                 </div>
             </div>
         </section>
@@ -549,4 +641,127 @@
                         <div class="screenshot-placeholder">
                             <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
                                 <circle cx="12" cy="12" r="3"/>
-                                <path d="M19.4 15a1.
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                            </svg>
+                        </div>
+                        <p><strong>Opciones Avanzadas</strong><br>Configuración detallada de alertas y scroll</p>
+                    </div>
+                    <div class="screenshot">
+                        <div class="screenshot-placeholder">
+                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                <line x1="12" y1="9" x2="12" y2="13"/>
+                                <line x1="12" y1="17" x2="12.01" y2="17"/>
+                            </svg>
+                        </div>
+                        <p><strong>Sistema de Alertas</strong><br>Notificaciones visuales por códigos de estado</p>
+                    </div>
+                    <div class="screenshot">
+                        <div class="screenshot-placeholder">
+                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                <path d="M3 12h18m-9-9l9 9-9 9"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </div>
+                        <p><strong>Rotación en Acción</strong><br>Vista de pestañas rotando automáticamente</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="faq" class="section">
+            <div class="container">
+                <h2>Preguntas Frecuentes</h2>
+                <div class="faq">
+                    <div class="faq-item">
+                        <h3>¿Funciona fuera de New Relic?</h3>
+                        <p>Sí, TabLooper + AutoScroll funciona en cualquier sitio web. Aunque fue optimizado para dashboards como New Relic, es completamente compatible con cualquier página que necesite rotación automática y auto-scroll.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>¿Funciona en ventanas privadas o páginas no listadas?</h3>
+                        <p>La extensión funciona en modo privado si tienes habilitado "Permitir en incógnito" en la configuración de la extensión. Para páginas internas del navegador (como chrome://) no funcionará por limitaciones de seguridad.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>¿Cómo configuro el selector para barras de gráficos?</h3>
+                        <p>Usa el selector CSS "svg rect" como recomendación general. Para gráficos específicos, inspecciona el elemento y usa selectores más específicos como ".chart-container svg rect" o "[data-chart] rect".</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="soporte" class="section" aria-labelledby="soporte-title">
+            <div class="container">
+                <h2 id="soporte-title">Soporte</h2>
+                <p style="text-align: center; color: var(--color-text-muted); margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    Ofrecemos múltiples canales de soporte para resolver tus dudas. Tiempo de respuesta típico: 24-48 horas en días laborables.
+                </p>
+                
+                <div class="support-grid">
+                    <div class="support-card">
+                        <div class="support-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                            </svg>
+                        </div>
+                        <h3>Issues en GitHub</h3>
+                        <p>Reporta bugs, solicita nuevas funcionalidades o consulta problemas técnicos en nuestro repositorio oficial.</p>
+                        <a href="https://github.com/tu-usuario/tu-repo/issues" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                            Abrir Ticket
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                <polyline points="15,3 21,3 21,9"/>
+                                <line x1="10" y1="14" x2="21" y2="3"/>
+                            </svg>
+                        </a>
+                    </div>
+                    
+                    <div class="support-card">
+                        <div class="support-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14,2 14,8 20,8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10,9 9,9 8,9"/>
+                            </svg>
+                        </div>
+                        <h3>Formulario de Soporte</h3>
+                        <p>Completa nuestro formulario estructurado para recibir ayuda personalizada con tu configuración específica.</p>
+                        <a href="https://forms.gle/XXXXXXXX" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                            Completar Formulario
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                <polyline points="15,3 21,3 21,9"/>
+                                <line x1="10" y1="14" x2="21" y2="3"/>
+                            </svg>
+                        </a>
+                    </div>
+                    
+                    <div class="support-card">
+                        <div class="support-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                        </div>
+                        <h3>Soporte por Email</h3>
+                        <p>Contacto directo para consultas específicas, problemas de configuración avanzada o feedback detallado.</p>
+                        <a href="mailto:soporte@ejemplo.com" class="btn btn-primary">
+                            soporte@ejemplo.com
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="privacy-note">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                    <p><strong>Nota de Privacidad:</strong> No se recolectan ni transmiten datos fuera del navegador; la información de soporte es la que tú envíes voluntariamente por el formulario o issues.</p>
+                </div>
+            </div>
+        </section>
